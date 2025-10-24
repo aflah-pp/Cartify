@@ -16,7 +16,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "https://cartify-server-u9f7.onrender.com"]
+ALLOWED_HOSTS = ["127.0.0.1", "cartify-server-u9f7.onrender.com"]
 
 
 # Application definition
@@ -142,3 +142,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=3),
 }
+
