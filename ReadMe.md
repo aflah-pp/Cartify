@@ -17,7 +17,7 @@
 
 ## Hosted Urls:-
 
-**Frontend** -[Hosted on Netlify](https://cartify-server-u9f7.onrender.com/)
+**Frontend** -[Hosted on Netlify](https://app-cartify.netlify.app/)
 
 **Backend** - [Hosted on Rendor](https://cartify-server-u9f7.onrender.com/)
 
