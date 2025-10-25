@@ -1,64 +1,64 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
-import { motion } from "framer-motion";
-import { FiCheckCircle, FiShoppingCart } from "react-icons/fi";
-import api, {BASE_URL} from "../utils/axios";
-import Navbar from "../ui/NavBar";
-import ProductPlaceHolder from "./ProductPlaceHolder";
-import RelatedProducts from "./RelatedProducts";
-import Error from "../ui/Error";
-import { toast } from "react-toastify";
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router'
+import { motion } from 'framer-motion'
+import { FiCheckCircle, FiShoppingCart } from 'react-icons/fi'
+import api, { BASE_URL } from '../utils/axios'
+import Navbar from '../ui/NavBar'
+import ProductPlaceHolder from './ProductPlaceHolder'
+import RelatedProducts from './RelatedProducts'
+import Error from '../ui/Error'
+import { toast } from 'react-toastify'
 
 function Product({ numCartItems, setNumCartItems }) {
-  const { slug } = useParams();
-  const [product, setProduct] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [similarProduct, setSimilarProduct] = useState([]);
-  const [error, setError] = useState("");
-  const [inCart, setInCart] = useState(false);
-  const cart_code = localStorage.getItem("cart_code");
-  const newItem = { cart_code: cart_code, product_id: product.id };
+  const { slug } = useParams()
+  const [product, setProduct] = useState({})
+  const [loading, setLoading] = useState(false)
+  const [similarProduct, setSimilarProduct] = useState([])
+  const [error, setError] = useState('')
+  const [inCart, setInCart] = useState(false)
+  const cart_code = localStorage.getItem('cart_code')
+  const newItem = { cart_code: cart_code, product_id: product.id }
 
   useEffect(() => {
-    setLoading(true);
+    setLoading(true)
     api
       .get(`products_detail/${slug}`)
-      .then((res) => {
-        setProduct(res.data);
-        setSimilarProduct(res.data.similar_product || []);
-        setLoading(false);
-        window.scrollTo({ top: 0, behavior: "smooth" });
+      .then(res => {
+        setProduct(res.data)
+        setSimilarProduct(res.data.similar_product || [])
+        setLoading(false)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       })
-      .catch((err) => {
-        console.log(err.message);
-        setLoading(false);
-        setError(err.message);
-      });
-  }, [slug]);
+      .catch(err => {
+        console.log(err.message)
+        setLoading(false)
+        setError(err.message)
+      })
+  }, [slug])
 
   useEffect(() => {
-    if (!cart_code || !product?.id) return;
+    if (!cart_code || !product?.id) return
     api
       .get(`product_in_cart?cart_code=${cart_code}&product_id=${product.id}`)
-      .then((res) => {
-        setInCart(res.data.product_in_cart);
+      .then(res => {
+        setInCart(res.data.product_in_cart)
       })
-      .catch((err) => console.log(err.message));
-  }, [cart_code, product.id]);
+      .catch(err => console.log(err.message))
+  }, [cart_code, product.id])
 
   function addItem() {
     api
-      .post("add_item", newItem)
+      .post('add_item', newItem)
       .then(() => {
-        setInCart(true);
-        setNumCartItems(numCartItems + 1);
-        toast.success("Product added to Cart.")
+        setInCart(true)
+        setNumCartItems(numCartItems + 1)
+        toast.success('Product added to Cart.')
       })
-      .catch((err) => console.log(err.message));
+      .catch(err => console.log(err.message))
   }
 
-  if (loading) return <ProductPlaceHolder />;
-  if (error) return <Error error={error} />;
+  if (loading) return <ProductPlaceHolder />
+  if (error) return <Error error={error} />
 
   return (
     <>
@@ -77,11 +77,11 @@ function Product({ numCartItems, setNumCartItems }) {
             initial={{ scale: 0.95 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="md:w-1/2 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl overflow-hidden"
+            className="md:w-1/2 flex items-center justify-center bg-linear-to-br from-gray-50 to-gray-100 rounded-xl overflow-hidden"
           >
             <img
-              src={`${BASE_URL}${product.image}`}
-              alt={product?.name || "Product"}
+              src={`${product.image}`}
+              alt={product?.name || 'Product'}
               className="w-full max-h-[500px] object-contain"
             />
           </motion.div>
@@ -96,7 +96,9 @@ function Product({ numCartItems, setNumCartItems }) {
               <p className="text-xl text-blue-600 font-bold mb-1">
                 ${product.price}
               </p>
-              <p className="text-xs text-gray-500 mb-3">Inclusive of all taxes</p>
+              <p className="text-xs text-gray-500 mb-3">
+                Inclusive of all taxes
+              </p>
 
               <motion.div
                 initial={{ opacity: 0, y: 15 }}
@@ -117,7 +119,7 @@ function Product({ numCartItems, setNumCartItems }) {
                 onClick={addItem}
                 disabled={inCart}
                 className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-5 rounded-lg shadow hover:shadow-md transition-all duration-300 ${
-                  inCart && "bg-green-600 hover:bg-green-700 cursor-default"
+                  inCart && 'bg-green-600 hover:bg-green-700 cursor-default'
                 }`}
               >
                 {inCart ? (
@@ -143,7 +145,7 @@ function Product({ numCartItems, setNumCartItems }) {
         </div>
       </motion.div>
     </>
-  );
+  )
 }
 
-export default Product;
+export default Product

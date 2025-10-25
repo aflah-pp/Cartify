@@ -1,56 +1,55 @@
-import { useState } from "react";
-import api, { BASE_URL } from "../utils/axios";
-import { motion } from "framer-motion";
-import { toast } from "react-toastify";
-import { FiMinus, FiPlus, FiTrash2 } from "react-icons/fi";
+import { useState } from 'react'
+import api, { BASE_URL } from '../utils/axios'
+import { motion } from 'framer-motion'
+import { toast } from 'react-toastify'
+import { FiMinus, FiPlus, FiTrash2 } from 'react-icons/fi'
 
 const buttonBaseStyles =
-  "w-10 h-10 flex items-center justify-center rounded-full transition-colors duration-200 disabled:opacity-50";
+  'w-10 h-10 flex items-center justify-center rounded-full transition-colors duration-200 disabled:opacity-50'
 
 function CartItems({ item, setNumCartItems, setCartItems }) {
-  const [quantity, setQuantity] = useState(item.quantity);
-  const [loading, setLoading] = useState(false);
+  const [quantity, setQuantity] = useState(item.quantity)
+  const [loading, setLoading] = useState(false)
 
-  
-  const updateQuantity = (newQuantity) => {
-    if (newQuantity < 1) return;
-    setLoading(true);
+  const updateQuantity = newQuantity => {
+    if (newQuantity < 1) return
+    setLoading(true)
     api
-      .patch("update_quantity/", {
+      .patch('update_quantity/', {
         item_id: item.id,
         quantity: newQuantity,
       })
       .then(() => {
-        setLoading(false);
-        setQuantity(newQuantity);
-        setNumCartItems((prev) => prev + (newQuantity - item.quantity));
-        toast.success("Cart updated successfully!");
+        setLoading(false)
+        setQuantity(newQuantity)
+        setNumCartItems(prev => prev + (newQuantity - item.quantity))
+        toast.success('Cart updated successfully!')
       })
-      .catch((err) => {
-        setLoading(false);
-        console.error("Failed to update quantity", err.message);
-        toast.error(err.message || "Failed to update cart");
-      });
-  };
+      .catch(err => {
+        setLoading(false)
+        console.error('Failed to update quantity', err.message)
+        toast.error(err.message || 'Failed to update cart')
+      })
+  }
 
   const deleteCartItem = () => {
-    if (window.confirm("Are you sure to delete item from cart?")) {
-      setLoading(true);
+    if (window.confirm('Are you sure to delete item from cart?')) {
+      setLoading(true)
       api
-        .delete("delete_cartitem/", { data: { item_id: item.id } })
+        .delete('delete_cartitem/', { data: { item_id: item.id } })
         .then(() => {
-          setLoading(false);
-          setCartItems((prev) => prev.filter((cartItem) => cartItem.id !== item.id));
-          setNumCartItems((prev) => prev - quantity);
-          toast.success("Item removed from cart");
+          setLoading(false)
+          setCartItems(prev => prev.filter(cartItem => cartItem.id !== item.id))
+          setNumCartItems(prev => prev - quantity)
+          toast.success('Item removed from cart')
         })
-        .catch((err) => {
-          setLoading(false);
-          console.error(err.message);
-          toast.error(err.message || "Failed to remove item");
-        });
+        .catch(err => {
+          setLoading(false)
+          console.error(err.message)
+          toast.error(err.message || 'Failed to remove item')
+        })
     }
-  };
+  }
 
   return (
     <motion.div
@@ -63,7 +62,7 @@ function CartItems({ item, setNumCartItems, setCartItems }) {
       {/* Product Image */}
       <div className="flex-shrink-0 w-32 h-32 mr-6">
         <img
-          src={`${BASE_URL}${item.product.image}`}
+          src={`${item.product.image}`}
           alt={item.product.name}
           className="w-full h-full object-contain rounded-md"
         />
@@ -71,7 +70,9 @@ function CartItems({ item, setNumCartItems, setCartItems }) {
 
       {/* Product Info */}
       <div className="flex-1 flex flex-col space-y-3">
-        <h3 className="text-lg font-semibold text-gray-900">{item.product.name}</h3>
+        <h3 className="text-lg font-semibold text-gray-900">
+          {item.product.name}
+        </h3>
 
         <div className="flex items-center justify-between flex-wrap">
           <div className="flex items-center space-x-6">
@@ -114,7 +115,7 @@ function CartItems({ item, setNumCartItems, setCartItems }) {
               disabled={loading}
               className="bg-blue-500 text-white hover:bg-blue-600 py-2 px-6 rounded-md text-sm font-medium transition-colors duration-200 disabled:opacity-50"
             >
-              {loading ? "Updating..." : "Update Cart"}
+              {loading ? 'Updating...' : 'Update Cart'}
             </motion.button>
 
             <motion.button
@@ -130,7 +131,7 @@ function CartItems({ item, setNumCartItems, setCartItems }) {
         </div>
       </div>
     </motion.div>
-  );
+  )
 }
 
-export default CartItems;
+export default CartItems

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import api, { BASE_URL } from "../utils/axios";
+import React, { useEffect, useState } from 'react'
+import api, { BASE_URL } from '../utils/axios'
 import {
   BarChart,
   Bar,
@@ -7,116 +7,116 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-} from "recharts";
-import { FiEdit2, FiTrash2, FiX, FiPlus, FiArrowLeft } from "react-icons/fi";
-import { motion, AnimatePresence } from "framer-motion";
+} from 'recharts'
+import { FiEdit2, FiTrash2, FiX, FiPlus, FiArrowLeft } from 'react-icons/fi'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const SellerDashboard = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([])
   const [dashboardData, setDashboardData] = useState({
     total_sales: 0,
     earnings: 0,
     chart_data: [],
-  });
-  const [loading, setLoading] = useState(false);
+  })
+  const [loading, setLoading] = useState(false)
 
   // Popup states
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false)
+  const [editingProduct, setEditingProduct] = useState(null)
 
   // Review popup state
-  const [reviewProduct, setReviewProduct] = useState(null);
+  const [reviewProduct, setReviewProduct] = useState(null)
 
   // Form state for add/edit
   const [form, setForm] = useState({
-    name: "",
-    price: "",
-    description: "",
-    category: "",
+    name: '',
+    price: '',
+    description: '',
+    category: '',
     image: null,
-    imagePreview: "",
-  });
+    imagePreview: '',
+  })
 
   const fetchData = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token')
       const [prodRes, dashRes] = await Promise.all([
-        api.get("seller/products/", {
+        api.get('seller/products/', {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        api.get("seller/dashboard/", {
+        api.get('seller/dashboard/', {
           headers: { Authorization: `Bearer ${token}` },
         }),
-      ]);
-      setProducts(prodRes.data);
-      setDashboardData(dashRes.data);
+      ])
+      setProducts(prodRes.data)
+      setDashboardData(dashRes.data)
     } catch (e) {
-      alert("Error loading data");
+      alert('Error loading data')
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "image") {
-      const file = files[0];
+  const handleChange = e => {
+    const { name, value, files } = e.target
+    if (name === 'image') {
+      const file = files[0]
       if (file) {
-        setForm((prev) => ({
+        setForm(prev => ({
           ...prev,
           image: file,
           imagePreview: URL.createObjectURL(file),
-        }));
+        }))
       }
     } else {
-      setForm((prev) => ({ ...prev, [name]: value }));
+      setForm(prev => ({ ...prev, [name]: value }))
     }
-  };
+  }
 
   const openPopup = (product = null) => {
     if (product) {
-      setEditingProduct(product);
+      setEditingProduct(product)
       setForm({
-        name: product.name || "",
-        price: product.price || "",
-        description: product.description || "",
-        category: product.category || "",
+        name: product.name || '',
+        price: product.price || '',
+        description: product.description || '',
+        category: product.category || '',
         image: null,
-        imagePreview: product.image || "",
-      });
+        imagePreview: product.image || '',
+      })
     } else {
-      setEditingProduct(null);
+      setEditingProduct(null)
       setForm({
-        name: "",
-        price: "",
-        description: "",
-        category: "",
+        name: '',
+        price: '',
+        description: '',
+        category: '',
         image: null,
-        imagePreview: "",
-      });
+        imagePreview: '',
+      })
     }
-    setIsPopupOpen(true);
-  };
+    setIsPopupOpen(true)
+  }
 
   const closePopup = () => {
     if (form.imagePreview && form.image) {
-      URL.revokeObjectURL(form.imagePreview);
+      URL.revokeObjectURL(form.imagePreview)
     }
-    setIsPopupOpen(false);
-  };
+    setIsPopupOpen(false)
+  }
 
   const submitProduct = async () => {
-    const token = localStorage.getItem("token");
-    const formData = new FormData();
-    formData.append("name", form.name);
-    formData.append("price", form.price);
-    formData.append("description", form.description);
-    formData.append("category", form.category);
-    if (form.image) formData.append("image", form.image);
+    const token = localStorage.getItem('token')
+    const formData = new FormData()
+    formData.append('name', form.name)
+    formData.append('price', form.price)
+    formData.append('description', form.description)
+    formData.append('category', form.category)
+    if (form.image) formData.append('image', form.image)
 
     try {
       if (editingProduct) {
@@ -126,53 +126,53 @@ const SellerDashboard = () => {
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
+              'Content-Type': 'multipart/form-data',
             },
           }
-        );
+        )
       } else {
-        await api.post("seller/products/create/", formData, {
+        await api.post('seller/products/create/', formData, {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'multipart/form-data',
           },
-        });
+        })
       }
-      fetchData();
-      closePopup();
+      fetchData()
+      closePopup()
     } catch (e) {
-      alert("Failed to save product");
+      alert('Failed to save product')
     }
-  };
+  }
 
-  const deleteProduct = async (id) => {
-    if (!window.confirm("Delete this product?")) return;
+  const deleteProduct = async id => {
+    if (!window.confirm('Delete this product?')) return
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token')
       await api.delete(`seller/products/${id}/delete/`, {
         headers: { Authorization: `Bearer ${token}` },
-      });
-      fetchData();
+      })
+      fetchData()
     } catch {
-      alert("Failed to delete product");
+      alert('Failed to delete product')
     }
-  };
+  }
 
   // Open review popup
-  const openReviewPopup = (product) => {
-    setReviewProduct(product);
-  };
+  const openReviewPopup = product => {
+    setReviewProduct(product)
+  }
 
   // Close review popup
   const closeReviewPopup = () => {
-    setReviewProduct(null);
-  };
+    setReviewProduct(null)
+  }
 
   return (
     <div className="p-6 max-w-7xl mx-auto font-sans">
       {/* Back to Shop */}
       <button
-        onClick={() => (window.location.href = "/shop")} // or use router if you have one
+        onClick={() => (window.location.href = '/shop')} // or use router if you have one
         className="inline-flex items-center gap-2 mb-6 text-indigo-600 hover:text-indigo-800 font-semibold transition focus:outline-none"
       >
         <FiArrowLeft size={20} />
@@ -218,7 +218,7 @@ const SellerDashboard = () => {
             >
               <XAxis
                 dataKey="name"
-                tick={{ fill: "#4f46e5", fontWeight: "bold" }}
+                tick={{ fill: '#4f46e5', fontWeight: 'bold' }}
               />
               <YAxis />
               <Tooltip />
@@ -264,13 +264,13 @@ const SellerDashboard = () => {
                   <tr
                     key={product.id}
                     className={`${
-                      idx % 2 === 0 ? "bg-gray-50" : "bg-white"
+                      idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'
                     } hover:bg-indigo-50 transition cursor-pointer`}
                     onClick={() => openReviewPopup(product)} // open review on row click
                   >
                     <td className="py-3 px-5">
                       <img
-                        src={`${BASE_URL}${product.image}`}
+                        src={`${product.image}`}
                         alt={product.name}
                         className="w-20 h-20 object-cover rounded"
                       />
@@ -286,7 +286,7 @@ const SellerDashboard = () => {
                     </td>
                     <td
                       className="py-3 px-5 flex justify-center gap-4"
-                      onClick={(e) => e.stopPropagation()} // prevent opening review popup on button clicks
+                      onClick={e => e.stopPropagation()} // prevent opening review popup on button clicks
                     >
                       <button
                         onClick={() => openPopup(product)}
@@ -326,7 +326,7 @@ const SellerDashboard = () => {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
             >
               <button
                 onClick={closePopup}
@@ -336,13 +336,13 @@ const SellerDashboard = () => {
                 <FiX size={24} />
               </button>
               <h3 className="text-xl font-semibold mb-4">
-                {editingProduct ? "Edit Product" : "Add New Product"}
+                {editingProduct ? 'Edit Product' : 'Add New Product'}
               </h3>
 
               <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  submitProduct();
+                onSubmit={e => {
+                  e.preventDefault()
+                  submitProduct()
                 }}
                 className="space-y-4"
               >
@@ -389,8 +389,8 @@ const SellerDashboard = () => {
                     className="block mb-1 font-medium cursor-pointer text-indigo-600 hover:text-indigo-800"
                   >
                     {form.imagePreview
-                      ? "Change Image"
-                      : "Upload Product Image"}
+                      ? 'Change Image'
+                      : 'Upload Product Image'}
                   </label>
                   <input
                     type="file"
@@ -412,7 +412,7 @@ const SellerDashboard = () => {
                   type="submit"
                   className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition focus:outline-none"
                 >
-                  {editingProduct ? "Save Changes" : "Add Product"}
+                  {editingProduct ? 'Save Changes' : 'Add Product'}
                 </button>
               </form>
             </motion.div>
@@ -435,7 +435,7 @@ const SellerDashboard = () => {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
             >
               <button
                 onClick={closeReviewPopup}
@@ -460,14 +460,14 @@ const SellerDashboard = () => {
                 {reviewProduct.category}
               </p>
               <p className="text-gray-800 whitespace-pre-wrap">
-                {reviewProduct.description || "No description provided."}
+                {reviewProduct.description || 'No description provided.'}
               </p>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
     </div>
-  );
-};
+  )
+}
 
-export default SellerDashboard;
+export default SellerDashboard

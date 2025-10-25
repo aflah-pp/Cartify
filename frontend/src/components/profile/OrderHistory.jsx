@@ -1,34 +1,34 @@
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import api, { BASE_URL } from "../utils/axios";
-import { FormateDate } from "../utils/formatDate";
+import { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import api, { BASE_URL } from '../utils/axios'
+import { FormateDate } from '../utils/formatDate'
 
 function OrderHistory() {
-  const [orders, setOrders] = useState([]);
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orders, setOrders] = useState([])
+  const [selectedOrder, setSelectedOrder] = useState(null)
 
   useEffect(() => {
-    api.get("user_order_history").then((res) => {
-      setOrders(res.data.orders);
-    });
-  }, []);
+    api.get('user_order_history').then(res => {
+      setOrders(res.data.orders)
+    })
+  }, [])
 
   // Animations variants for list items
   const listItemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
-  };
+  }
 
   // Modal animation variants
   const modalBackdrop = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
-  };
+  }
 
   const modalContent = {
     hidden: { opacity: 0, scale: 0.8 },
     visible: { opacity: 1, scale: 1 },
-  };
+  }
 
   return (
     <div className="relative">
@@ -40,8 +40,8 @@ function OrderHistory() {
         animate="visible"
         className={`space-y-4 pr-1 ${
           orders.length > 3
-            ? "max-h-[220px] overflow-y-auto scroll-smooth scrollbar-hide"
-            : ""
+            ? 'max-h-[220px] overflow-y-auto scroll-smooth scrollbar-hide'
+            : ''
         }`}
       >
         {orders.map((order, index) => (
@@ -58,9 +58,9 @@ function OrderHistory() {
               </span>
               <span
                 className={`text-xs px-2 py-1 rounded-full ${
-                  order.status === "completed"
-                    ? "bg-green-100 text-green-700"
-                    : "bg-gray-100 text-gray-700"
+                  order.status === 'completed'
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-gray-100 text-gray-700'
                 }`}
               >
                 {order.status}
@@ -93,7 +93,7 @@ function OrderHistory() {
               initial="hidden"
               animate="visible"
               exit="hidden"
-              transition={{ duration: 0.3, ease: "easeOut" }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
             >
               <button
                 onClick={() => setSelectedOrder(null)}
@@ -113,19 +113,21 @@ function OrderHistory() {
               </p>
 
               <div className="space-y-4">
-                {selectedOrder.items.map((item) => (
+                {selectedOrder.items.map(item => (
                   <div
                     key={item.id}
                     className="flex gap-4 border rounded p-3 items-center"
                   >
                     <img
-                      src={`${BASE_URL}${item.product_image}`}
+                      src={`${item.product_image}`}
                       alt={item.product_name}
                       className="w-20 h-20 object-cover rounded"
                     />
                     <div>
                       <p className="font-medium">{item.product_name}</p>
-                      <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
+                      <p className="text-sm text-gray-500">
+                        Qty: {item.quantity}
+                      </p>
                       <p className="text-sm text-gray-500">
                         ${item.price.toFixed(2)}
                       </p>
@@ -138,7 +140,10 @@ function OrderHistory() {
                 <p className="text-lg font-bold text-gray-800">
                   Total: $
                   {selectedOrder.items
-                    .reduce((total, item) => total + item.price * item.quantity, 0)
+                    .reduce(
+                      (total, item) => total + item.price * item.quantity,
+                      0
+                    )
                     .toFixed(2)}
                 </p>
               </div>
@@ -147,7 +152,7 @@ function OrderHistory() {
         )}
       </AnimatePresence>
     </div>
-  );
+  )
 }
 
-export default OrderHistory;
+export default OrderHistory
