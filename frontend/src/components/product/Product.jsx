@@ -80,7 +80,7 @@ function Product({ numCartItems, setNumCartItems }) {
             className="md:w-1/2 flex items-center justify-center bg-linear-to-br from-gray-50 to-gray-100 rounded-xl overflow-hidden"
           >
             <img
-              src={`${product.image}`}
+              src={`${product.cover_image_url}`}
               alt={product?.name || 'Product'}
               className="w-full max-h-[500px] object-contain"
             />

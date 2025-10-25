@@ -2,6 +2,7 @@ from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
+import cloudinary
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -14,7 +15,7 @@ load_dotenv()
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1", "cartify-server-u9f7.onrender.com"]
 
@@ -33,6 +34,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "rest_framework_simplejwt",
+    "cloudinary_storage",
+    "cloudinary",
 ]
 
 MIDDLEWARE = [
@@ -130,6 +133,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # Let WhiteNoise compress and cache static files
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 AUTH_USER_MODEL = "core.CustomUser"
 # Default primary key field type
@@ -143,3 +147,11 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=3),
 }
 
+cloudinary.config(
+    **{
+        "cloud_name": os.getenv("CLOUDINARY_CLOUD_NAME"),
+        "api_key": os.getenv("CLOUDINARY_API_KEY"),
+        "api_secret": os.getenv("CLOUDINARY_API_SECRET"),
+        "secure": True,
+    }
+)

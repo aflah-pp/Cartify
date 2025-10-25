@@ -270,7 +270,7 @@ const SellerDashboard = () => {
                   >
                     <td className="py-3 px-5">
                       <img
-                        src={`${product.image}`}
+                        src={`${product.cover_image_url}`}
                         alt={product.name}
                         className="w-20 h-20 object-cover rounded"
                       />
@@ -446,7 +446,7 @@ const SellerDashboard = () => {
               </button>
 
               <img
-                src={`${BASE_URL}${reviewProduct.image}`}
+                src={`${reviewProduct.cover_image_url}`}
                 alt={reviewProduct.name}
                 className="w-full h-64 object-cover rounded mb-4"
               />

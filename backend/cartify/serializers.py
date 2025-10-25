@@ -6,25 +6,7 @@ from .models import Product, Cart, CartItem
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Product
-        fields = ["id", "name", "slug", "image", "description", "price", "category"]
-
-    def get_image(self, obj):
-        """Return full image URL instead of just /media/..."""
-        request = self.context.get("request")
-        if obj.image and hasattr(obj.image, "url"):
-            if request:
-                return request.build_absolute_uri(obj.image.url)
-            return obj.image.url
-        return None
-
-
-class DetailProductSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
-    similar_product = serializers.SerializerMethodField()
+    cover_image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -32,25 +14,45 @@ class DetailProductSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "slug",
+            "cover_image_url",
+            "description",
+            "price",
+            "category",
+        ]
+
+    def get_cover_image_url(self, obj):
+        if obj.image:
+            return obj.image.url.replace("/upload/", "/upload/q_auto,f_auto,w_600/")
+        return None
+
+
+class DetailProductSerializer(serializers.ModelSerializer):
+
+    similar_product = serializers.SerializerMethodField()
+    cover_image_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Product
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "cover_image_url",
             "image",
             "description",
             "price",
             "similar_product",
         ]
 
-    def get_image(self, obj):
-        """Return full image URL for detailed product"""
-        request = self.context.get("request")
-        if obj.image and hasattr(obj.image, "url"):
-            if request:
-                return request.build_absolute_uri(obj.image.url)
-            return obj.image.url
-        return None
-
     def get_similar_product(self, obj):
         products = Product.objects.filter(category=obj.category).exclude(id=obj.id)
         serializer = ProductSerializer(products, many=True, context=self.context)
         return serializer.data
+
+    def get_cover_image_url(self, obj):
+        if obj.image:
+            return obj.image.url.replace("/upload/", "/upload/q_auto,f_auto,w_600/")
+        return None
 
 
 # ------------------ CART SERIALIZERS ------------------ #

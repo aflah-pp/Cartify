@@ -180,9 +180,7 @@ def initiate_payment(request):
         ref=tx_ref, cart=cart, amount=total_amount, status="pending"
     )
 
-    payment_link = (
-        f"http://localhost:5173/payment?order_id={order_id}&amount={total_amount}"
-    )
+    payment_link = f"http://app-cartify.netlify.app/payment?order_id={order_id}&amount={total_amount}"
 
     return Response(
         {
@@ -217,10 +215,10 @@ def payment_status(request):
                     cart=cart, product=item.product, quantity=item.quantity
                 )
 
-            success_url = f"http://localhost:5173/payment-status?order_id={order_id}&status=success"
+            success_url = f"http://app-cartify.netlify.app/payment-status?order_id={order_id}&status=success"
         else:
             transaction.status = "failed"
-            success_url = f"http://localhost:5173/payment-status?order_id={order_id}&status=failed"
+            success_url = f"http://app-cartify.netlify.app/payment-status?order_id={order_id}&status=failed"
 
         transaction.save()
 
@@ -261,9 +259,7 @@ def user_order_history(request):
             cart_items = cart.items.all()
             for item in cart_items:
                 image_url = (
-                    request.build_absolute_uri(item.product.image.url)
-                    if item.product.image
-                    else None
+                    request.item.product.cover_image_url if item.product.image else None
                 )
                 order_data["items"].append(
                     {

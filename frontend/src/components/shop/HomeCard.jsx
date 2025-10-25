@@ -17,7 +17,7 @@ function HomeCard({ product }) {
       <Link to={`/product/${product.slug}`} className="flex flex-col grow">
         <div className="relative w-full h-52 rounded-xl overflow-hidden bg-gradient-to-tr from-blue-50 to-blue-100 mb-4 flex items-center justify-center">
           <img
-            src={`${product.image}`}
+            src={`${product.cover_image_url}`}
             alt={product?.name || 'Product Name'}
             className="object-contain max-h-full max-w-full transition-transform duration-300 ease-in-out group-hover:scale-105"
           />

@@ -62,7 +62,7 @@ function CartItems({ item, setNumCartItems, setCartItems }) {
       {/* Product Image */}
       <div className="flex-shrink-0 w-32 h-32 mr-6">
         <img
-          src={`${item.product.image}`}
+          src={`${item.product.cover_image_url}`}
           alt={item.product.name}
           className="w-full h-full object-contain rounded-md"
         />
