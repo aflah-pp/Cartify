@@ -15,6 +15,14 @@
 
 ---
 
+## Hosted Urls:-
+
+**Frontend** -[Hosted on Netlify](https://cartify-server-u9f7.onrender.com/)
+
+**Backend** - [Hosted on Rendor](https://cartify-server-u9f7.onrender.com/)
+
+---
+
 ## 🔐 Authentication
 
 - ✅ Register
